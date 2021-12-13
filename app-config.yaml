@@ -4,4 +4,4 @@ metadata:
   name: app-config
 data:
   BD_URL: mysql-service
-  MYSQL_DATABASE: test
+  MYSQL_DATABASE: stock

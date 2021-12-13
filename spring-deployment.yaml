@@ -15,26 +15,31 @@ spec:
         app: spring
     spec:
       containers:
-      - name: spring
-        image: spring-app
-        ports:
-        - containerPort: 8090
-        env:
-        - name: MYSQL_USER
-          valueFrom:
-            secretKeyRef:
-              name: app-secret
-              key: USER_LOGIN
-        - name: MYSQL_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: app-secret
-              key: USER_PWD
-        - name: MYSQL_DATABASE
-          valueFrom:
-            secretKeyRef:
-              name: app-config
-              key: spring_DATABASE      
+        - name: spring
+          image: moisegui/app
+          ports:
+            - containerPort: 8090
+          env:
+            - name: MYSQL_USER
+              valueFrom:
+                secretKeyRef:
+                  name: app-secret
+                  key: USER_LOGIN
+            - name: MYSQL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: app-secret
+                  key: USER_PWD
+            - name: MYSQL_DATABASE
+              valueFrom:
+                configMapKeyRef:
+                  name: app-config
+                  key: MYSQL_DATABASE
+            - name: BD_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: app-config
+                  key: BD_URL
 ---
 apiVersion: v1
 kind: Service
@@ -42,10 +47,10 @@ metadata:
   name: spring-service
 spec:
   type: NodePort
-  selector: 
+  selector:
     app: spring
   ports:
     - protocol: TCP
       port: 8090
       targetPort: 8090
-      nodePort: 30001 
+      nodePort: 30001
